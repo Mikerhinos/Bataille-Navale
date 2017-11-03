@@ -1,0 +1,10 @@
+@font-face{
+    font-family: "Digit";
+    src: url("fonts/digital.ttf");
+}
+body{
+    text-align: center; 
+}
+#score{
+    font-family: "Digit";
+}
