@@ -1,0 +1,34 @@
+@font-face{
+    font-family: "Digit";
+    src: url("fonts/digital.ttf");
+}
+
+body{
+    text-align: center; 
+    background-color: #020414;
+    color: #999;
+}
+
+#score{
+    font-family: "Digit";
+}
+
+table {
+    width: 90%;
+    margin-top: 5%;
+}
+
+td {
+    border: solid darkblue 2px;
+}
+
+td .hoverLight {
+  opacity: 0.4;
+  background-color: black;
+}
+
+td:hover .hoverLight {
+  opacity: 0.7;
+  background-color: cyan;
+  cursor: crosshair;
+}

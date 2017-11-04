@@ -1,0 +1,37 @@
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+.sidebar-nav {
+  padding: 9px 0;
+}
+
+.dropdown-menu .sub-menu {
+  left: 100%;
+  position: absolute;
+  top: 0;
+  visibility: hidden;
+  margin-top: -1px;
+}
+
+.dropdown-menu li:hover .sub-menu {
+  visibility: visible;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+  font-size: 0.9em;
+}
+
+.bandeau {
+    background-image: url("img/ray.png");
+}
+
+.mato-2 {
+    margin-top: 6em;
+}
+
+.mato-1 {
+    margin-top: 2em;
+}
