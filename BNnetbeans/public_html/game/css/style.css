@@ -14,7 +14,7 @@ body{
 }
 
 table {
-    width: 90%;
+    width: 85%;
     margin-top: 5%;
 }
 
@@ -30,5 +30,10 @@ td .hoverLight {
 td:hover .hoverLight {
   opacity: 0.7;
   background-color: cyan;
-  cursor: crosshair;
+  cursor: url(../img/Attack.ani),url(../img/crosshair.cur), auto;
+}
+
+#celvide {
+    border-left: 0;
+    border-top: 0;
 }
