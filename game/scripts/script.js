@@ -23,7 +23,7 @@ $("document").ready(function createTabCPU(){
     }
 });
 
-// Fonction de récupération de l'id de la case cliquée
+// Fonction de récupération de l'id de la cellule cliquée
 $("document").ready(function tdClicked(){
     $("#tabCPUConst").on("click", "td", function() {
         console.log(this.id);
