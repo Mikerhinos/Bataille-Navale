@@ -30,7 +30,7 @@ td .hoverLight {
 td:hover .hoverLight {
   opacity: 0.7;
   background-color: cyan;
-  cursor: url(../img/Attack.ani),url(../img/crosshair.cur), auto;
+  cursor: crosshair;
 }
 
 #celvide {
