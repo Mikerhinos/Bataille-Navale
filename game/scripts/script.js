@@ -3,6 +3,7 @@ var doc = $("document");
 var tabplayer = $(".tabPlayer");
 var tabcpu = $(".tabCPU");
 doc.ready(function createTabPlay(){
+    tabplayer.append("<tr><td id='celvide'></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td></tr>");// Header des numéros de colonnes    
     for (i=65; i<=74; i++){
         tabplayer.append("<tr>");
         for (j=1; j<=10; j++){
