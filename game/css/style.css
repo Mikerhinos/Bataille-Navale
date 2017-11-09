@@ -21,7 +21,7 @@ table {
 
 td {
     border: solid darkblue 2px;
-    width:1%; /* redéfinit la pleine taille aux cellules */
+    /*width:1%; /* redéfinit la pleine taille aux cellules */
 }
 
 td .hoverLight {
