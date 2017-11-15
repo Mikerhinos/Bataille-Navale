@@ -16,12 +16,14 @@ body{
 
 table {
     width: 85%;
-    margin-top: 5%;
+    margin-top:5%;
+    margin-left: 8%;
+    margin-right: 8%;
 }
 
 td {
     border: solid darkblue 2px;
-    /*width:1%; /* redéfinit la pleine taille aux cellules */
+    width:50px;
 }
 
 td .hoverLight {
@@ -38,4 +40,9 @@ td:hover .hoverLight {
 #celvide {
     border-left: 0;
     border-top: 0;
+}
+
+#missile, #missCP {
+    background-color: rgba(114, 123, 132, 0.53);
+    color: rgba(230, 95, 18, 0.877);    
 }

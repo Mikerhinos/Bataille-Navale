@@ -1,43 +1,50 @@
 <!-- /!\  POUR VOIR LES RESULTATS GRAPHIQUES SEULEMENT, A ENLEVER UNE FOIS LA VERSION HTML FAITE : HEAD / BODY (GARDER QUE LE CONTENU) !!!!! -->
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- APPEL BOOTSTRAP, CSS ET JAVASCRIPT -->
-    <link href="css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="css/style.css" rel="stylesheet"/>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/style.css" rel="stylesheet" />
     <link rel="icon" href="img/Ancre.ico">
     <title>BATAILLE NAVALE</title>
 </head>
+
 <body>
+    <div class="container">
+        <div class="row">
+
+            <div id="score" class="col-sm-12 ">000 : 000</div>
+
+        </div>
+    </div>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-4 hidden-xs">
-                <p>PLAYER</p>
-            </div>
-            <div id="score" class="col-sm-4 ">000 : 000</div>
-            <div class="col-xs-4 hidden-xs">COMPUTER</div>
-        </div>                                                                                                                                            
-
-        <div class="row">
             <div class="col-sm-6">
+
                 <table>
+                    <thead>PLAYER</thead>
                     <tbody class="tabPlayer">
                     </tbody>
                 </table>
             </div>
             <div class="col-sm-6">
-                <table id="tabCPUConst">
+
+                <table>
+                    <thead>COMPUTER</thead>
                     <tbody class="tabCPU">
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+
     <script src="scripts/jquery-1.11.2.min.js"></script>
     <script src="scripts/script.js"></script>
     <!-- Appel du CDN de jquery /!\ Toujours importer les js en fin de body-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </body>
+
 </html>
