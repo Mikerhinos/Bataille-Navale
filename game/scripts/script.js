@@ -1,25 +1,25 @@
-// Génération du tableau Player avec ids
 var doc = $("document");
 var tabplayer = $(".tabPlayer");
 var tabcpu = $(".tabCPU");
 var tabCPU = [];
 
+// Génération du tableau Player avec ids
 doc.ready(function createTabPlay() {
-    tabplayer.append("<tr><td id='celvide'></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td></tr>");// Header des numéros de colonnes    
+
+    tabplayer.append("<tr><td id='missile'></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td></tr>");// Header des numéros de colonnes    
     for (i = 65; i <= 74; i++) {
-        tabplayer.append("<tr>");
+        tabplayer.append("<tr id='P" + String.fromCharCode(i) + "'><td>" + String.fromCharCode(i) + "</td>");
         for (j = 1; j <= 10; j++) {
-            tabplayer.append("<td id='" + String.fromCharCode(i) + "-" + j + "'><img class='img-responsive' src='img/sea.gif'></td>");
+            $("#P" + String.fromCharCode(i)).append("<td class='drop' id='" + String.fromCharCode(i) + "-" + j + "'><img class='img-responsive' src='img/sea.gif'></td>");
         }
         tabplayer.append("</tr>");
     }
-    tabplayer.append("</tbody>");
-
 });
 
 // Génération du tableau CPU avec ids
 doc.ready(function createTabCPU() {
-    tabcpu.append("<tr><td id='celvide'></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td></tr>");// Header des numéros de colonnes
+
+    tabcpu.append("<tr><td id='missCP'></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td></tr>");// Header des numéros de colonnes
     for (i = 65; i <= 74; i++) {// Création des 10 lignes de jeu
         tabcpu.append("<tr id='" + String.fromCharCode(i) + "'><td>" + String.fromCharCode(i) + "</td>");// La première case de chaque ligne est la lettre
         for (j = 1; j <= 10; j++) {
@@ -28,10 +28,21 @@ doc.ready(function createTabCPU() {
         tabcpu.append("</tr>");// fin de ligne, ajout du tag de clôture
     }
 });
-
 // Fonction de récupération de l'id de la cellule cliquée
+// + Génération du nombre de missiles
 doc.ready(function tdClicked() {
-    $("#tabCPUConst").on("click", "td", function () {
+    missRest = 35; //Nombre de missile du joueur humain
+    missCP = '∞'; //Nombre de missile de l'IA
+    $("#missCP").append("<img class='img-responsive' src='img/missile.png'/>" + missCP);
+    $("#missile").append("<img class='img-responsive' src='img/missile.png'/>" + missRest);
+    $(".tabCPU").on("click", "td", function () {
+        $("#missile").empty();
+        missRest -= 1; // A chaque clic sur une case ennemie, on enlève un missile
+        $("#missile").append("<img class='img-responsive' src='img/missile.png'/>" + missRest);
+        if (missRest == 0) {
+            alert("Plus de coup disponible");
+            missRest = 1; // pour contrer la décrementation
+        };
         console.log(this.id);
     });
 });
@@ -49,7 +60,7 @@ function choixCPU() {
 function vidageTabCPU() {
     for (var i = 1; i <= 10; i++) {
         for (var j = 1; j <= 10; j++) {
-            tabCPU.push([i,j,0]); // début du jeu, vidage du tableau de mémorisation des bateaux du CPU
+            tabCPU.push([i, j, 0]); // début du jeu, vidage du tableau de mémorisation des bateaux du CPU
         }
     }
 }
@@ -81,7 +92,7 @@ function placer(taille) {
         if (horiz) { // Si le bateau doit être placé à l'horizontal
             if ((parseInt(chiffre) + parseInt(taille)) <= 10) {
                 for (k = chiffre; k < (parseInt(chiffre) + parseInt(taille)); k++) {
-                        // tabCPU[k][parseInt(lettre)][0] = 1;
+                    // tabCPU[k][parseInt(lettre)][0] = 1;
                 }
             }
             else {
@@ -105,4 +116,14 @@ function placer(taille) {
 //Fonction de placement des bateaux par le joueur
 doc.ready(function placeShipsPLAYER() {
     //TODO
+    var porteAvion ="5cases";
+    var croiseur = "4cases";
+    var contreTorpilleur = "3cases";
+    var sousMarin = "3cases";
+    var Torpilleur = "2cases";
+    $(".tabPlayer").on("click", ".drop", function () {
+        $(this).empty();
+        $(this).append("<img class='img-responsive' src='img/bateau.png'/>");
+        
+    });
 });
