@@ -53,7 +53,6 @@ doc.ready(function tdClicked() {
             alert("Plus de coup disponible");
             //missRest = 1; // pour contrer la décrementation
         }
-        ;
         if (missRest > 0) {
             if (tabCPUships.indexOf(this.id) !== -1) { // si l'ID de la cellule cliquée est dans la liste des cellules du tableau de jeu du CPU
                 console.log("TOUCHE !");
@@ -117,7 +116,7 @@ function vidageTabPlayer() {
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////
-// Fonction d'initialisation du CPU à lancer une fois que le joueur clique sur "Prêt"
+// Fonction d'initialisation du CPU
 //////////////////////////////////////////////////////////////////////////////////////
 doc.ready(function initialisation() {
     vidageTabCPU();
@@ -127,8 +126,8 @@ doc.ready(function initialisation() {
     placer(3); // contreTorpilleur
     placer(3); // sousMarin
     placer(2); // torpilleur
-    console.log(tabPlayer);
-    //console.log(tabCPUships);
+    //console.log(tabPlayer);
+    console.log(tabCPUships);
 });
 
 //////////////////////////////////////////
@@ -145,11 +144,21 @@ function placer(taille) {
     }
     if (horiz) { // Si le bateau doit être placé à l'horizontal
         if (((chiffre + parseInt(taille)) <= 10) && (chiffre + parseInt(taille) >= 3)) { // vérifier que le bateau tiendra bien dans le tableau
-            for (var k = chiffre; k < (chiffre + parseInt(taille)); k++) { // pour case de départ jusqu'à case d'arrivée
-                var id = "#" + k + "-" + lettre;
-                tabCPUships.push(k + "-" + lettre); // ajout dans le tableau de la case occupée par la partie de bateau
-                //$(id).html("<img class='img-responsive hoverLight' src='img/bateau.png'>"); // remplacement de l'image de fonds des cases occupées, pour debug uniquement
-                //console.log(id);
+            for (var k = chiffre; k < (chiffre + parseInt(taille)); k++) {
+                if (tabCPUships.indexOf(k + "-" + lettre) > -1) { // si le tableau comprends déjà une case occupée par la future position du bateau
+                    placer(taille); // rechoisir une cellule de départ et recommencer
+                }
+                else {
+                    for (var k = chiffre; k < (chiffre + parseInt(taille)); k++) { // pour case de départ jusqu'à case d'arrivée
+                        var id = "#" + k + "-" + lettre;
+                        tabCPUships.push(k + "-" + lettre); // ajout dans le tableau de la case occupée par la partie de bateau
+                        //$(id).html("<img class='img-responsive hoverLight' src='img/bateau.png' style='opacity: 0.3'>"); // remplacement de l'image de fonds des cases occupées, pour DEBUG uniquement
+                        //console.log(id);
+                        if (tabCPUships.length === 17){ // quand tous les bateaux sont placés, sortir
+                            return 1;
+                        }
+                    }
+                }
             }
         }
         else {
@@ -159,9 +168,19 @@ function placer(taille) {
     else { // sinon le bateau sera placé à la verticale
         if (((lettre + parseInt(taille)) <= 10) && (lettre + parseInt(taille) >= 3)) { // idem horizontal
             for (var k = lettre; k < (lettre + parseInt(taille)); k++) {
-                var idV = "#" + chiffre + "-" + k;
-                tabCPUships.push(chiffre + "-" + k);
-                //$(idV).html("<img class='img-responsive hoverLight' src='img/bateau.png'>"); // remplacement de l'image de fonds des cases occupées, pour debug uniquement
+                if (tabCPUships.indexOf(chiffre + "-" + k) > -1){
+                    placer(taille);
+                }
+            else {
+                    for (var k = lettre; k < (lettre + parseInt(taille)); k++) {
+                        var idV = "#" + chiffre + "-" + k;
+                        tabCPUships.push(chiffre + "-" + k);
+                        //$(idV).html("<img class='img-responsive hoverLight' src='img/bateau.png'>"); // remplacement de l'image de fonds des cases occupées, pour DEBUG uniquement
+                        if (tabCPUships.length === 17){
+                            return 1;
+                        }
+                    }
+                }
             }
         }
         else {
