@@ -4,6 +4,7 @@ var tabPlayer = [];
 var tabcpu = $(".tabCPU");
 var tabCPU = [];
 var tabCPUships = [];
+var tabPlayerships = [];
 var score = 0;
 var missRest = 35; //Nombre de missile du joueur humain
 var missCP = '∞'; //Nombre de missile de l'IA
@@ -122,13 +123,20 @@ function vidageTabPlayer() {
 doc.ready(function initialisation() {
     vidageTabCPU();
     vidageTabPlayer();
+    
     placer(5); // porteAvion
     placer(4); // croiseur
     placer(3); // contreTorpilleur
     placer(3); // sousMarin
     placer(2); // torpilleur
-    console.log(tabPlayer);
-    //console.log(tabCPUships);
+    
+    console.log(tabCPUships);
+    playerShips(5);// porteAvion
+    playerShips(4);// croiseur
+    playerShips(3);// contreTorpilleur
+    playerShips(3);// sousMarin
+    playerShips(2);// torpilleur
+    console.log(tabPlayerships);
 });
 
 //////////////////////////////////////////
@@ -174,16 +182,39 @@ function placer(taille) {
 /////////////////////////////////////////////////////
 //Fonction de placement des bateaux par le joueur
 /////////////////////////////////////////////////////
-doc.ready(function placeShipsPLAYER() {
-    //TODO
-    var porteAvion = "5cases";
-    var croiseur = "4cases";
-    var contreTorpilleur = "3cases";
-    var sousMarin = "3cases";
-    var Torpilleur = "2cases";
-    $(".tabPlayer").on("click", ".drop", function () {
-        $(this).empty();
-        $(this).append("<img class='img-responsive' src='img/bateau.png'/>");
-
-    });
-});
+function playerShips(taille) {
+    var rand = Math.random();
+    var horiz = true; // variable qui gère si le bateau sera placé à l'horizontale ou verticale
+    var choix = choixCPU(); // génération d'un choix de case aléatoire --> utilisation de la fonction choixCPU au lieu de faire 2 fois la même fonction
+    var chiffre = Number(choix.charAt(0)) + 1; // chiffre généré, qui est le premier chiffre du nombre retourné par choixCPU, convertie en number étant donné que la fonction return un string
+    var lettre = Number(choix.charAt(1)) + 1; // lettre générée, qui est le 2ème chiffre du nombre retourné par choix CPU, les 2 ont ensuite 1 d'ajouté pour aller de 1 à 10
+    if (rand >= 0.5) {
+        horiz = false; // utilisation d'un random, s'il est au dessus de 0.5 alors le bateau sera en position verticale
+    }
+    if (horiz) { // Si le bateau doit être placé à l'horizontal
+        if (((chiffre + parseInt(taille)) <= 10) && (chiffre + parseInt(taille) >= 3)) { // vérifier que le bateau tiendra bien dans le tableau
+            for (var k = chiffre; k < (chiffre + parseInt(taille)); k++) { // pour case de départ jusqu'à case d'arrivée
+                var id = "#P" + k + "-" + lettre;
+                tabPlayerships.push(k + "-" + lettre); // ajout dans le tableau de la case occupée par la partie de bateau
+                $(id).html("<img class='img-responsive' src='img/bateau.png'>"); //affiche la position des bateaux du joueur
+                //console.log(id);
+            }
+        }
+        else {
+            playerShips(taille);
+        }
+    }
+    else { // sinon le bateau sera placé à la verticale
+        if (((lettre + parseInt(taille)) <= 10) && (lettre + parseInt(taille) >= 3)) { // idem horizontal
+            for (var k = lettre; k < (lettre + parseInt(taille)); k++) {
+                var idV = "#P" + chiffre + "-" + k;
+                tabPlayerships.push(chiffre + "-" + k);
+                $(idV).html("<img class='img-responsive' src='img/bateau.png'>"); // affiche la position des bateaux du joueur
+            }
+        }
+        else {
+            playerShips(taille);
+        }
+    }
+    // console.log("choix : " + chiffre + "-" + lettre);
+}
