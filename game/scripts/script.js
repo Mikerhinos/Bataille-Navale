@@ -1,5 +1,6 @@
 var doc = $("document");
 var tabplayer = $(".tabPlayer");
+var tabPlayer = [];
 var tabcpu = $(".tabCPU");
 var tabCPU = [];
 var tabCPUships = [];
@@ -22,7 +23,7 @@ doc.ready(function createTabPlay() {
 doc.ready(function createTabCPU() {
 
     tabcpu.append("<tr><td id='missCP'></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td></tr>");// Header des numéros de colonnes
-    for (i = 65; i <= 74; i++) {// Création des 10 lignes de jeu
+    for (var i = 65; i <= 74; i++) {// Création des 10 lignes de jeu
         tabcpu.append("<tr id='" + String.fromCharCode(i) + "'><td>" + String.fromCharCode(i) + "</td>");// La première case de chaque ligne est la lettre
         for (j = 1; j <= 10; j++) {
             $("#" + String.fromCharCode(i)).append("<td id='" + j + "-" + (i-64) + "'><img class='img-responsive hoverLight' src='img/sea.gif'></td>");// création des cellules avec id perso de 1-1 à 10-10
@@ -57,8 +58,19 @@ doc.ready(function tdClicked() {
             $(this).html("<img class='img-responsive' src='img/sea.gif' style='background-color: red; opacity: 1'>");
         }
         //console.log(this.id);
+        cpuPlay();
     });
 });
+
+// Fonction de coup CPU
+function cpuPlay(){
+    var coup = tabPlayer[Math.floor(Math.random() * tabPlayer.length)]; // récupération d'une cellule aléatoire dans le tableau de choix de cellules
+    var index = tabPlayer.indexOf(coup); // récupération de l'index du tableau contenant cette cellule
+    if (index > -1) { // si l'index a bien été récupéré
+        tabPlayer.splice(index, 1); // suppression de cette cellule, elle ne pourra plus être jouée une 2ème fois
+    }
+    console.log(tabPlayer);
+}
 
 //Fonction de choix de cellules CPU
 function choixCPU() {
@@ -77,17 +89,26 @@ function vidageTabCPU() {
         }
     }
 }
+// Fonction vidage du tableau Player
+function vidageTabPlayer() {
+    for (var i = 1; i <= 10; i++) {
+        for (var j = 1; j <= 10; j++) {
+            tabPlayer.push([i + "-" + j]); // début du jeu, vidage du tableau de mémorisation des bateaux du CPU
+        }
+    }
+}
 
 // Fonction d'initialisation du CPU à lancer une fois que le joueur clique sur "Prêt"
 doc.ready(function initialisation() {
     vidageTabCPU();
+    vidageTabPlayer();
     placer(5); // porteAvion
     placer(4); // croiseur
     placer(3); // contreTorpilleur
     placer(3); // sousMarin
     placer(2); // torpilleur
-    //console.log(tabCPU);
-    console.log(tabCPUships);
+    console.log(tabPlayer);
+    //console.log(tabCPUships);
 });
 
 // Fonction de placement des bateaux CPU
