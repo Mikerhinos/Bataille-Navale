@@ -2,6 +2,8 @@ var doc = $("document");
 var tabplayer = $(".tabPlayer");
 var tabcpu = $(".tabCPU");
 var tabCPU = [];
+var tabCPUships = [];
+var score = 0;
 
 // Génération du tableau Player avec ids
 doc.ready(function createTabPlay() {
@@ -23,7 +25,7 @@ doc.ready(function createTabCPU() {
     for (i = 65; i <= 74; i++) {// Création des 10 lignes de jeu
         tabcpu.append("<tr id='" + String.fromCharCode(i) + "'><td>" + String.fromCharCode(i) + "</td>");// La première case de chaque ligne est la lettre
         for (j = 1; j <= 10; j++) {
-            $("#" + String.fromCharCode(i)).append("<td id='" + String.fromCharCode(i) + "-" + j + "'><img class='img-responsive hoverLight' src='img/sea.gif'></td>");// création des cellules avec id perso
+            $("#" + String.fromCharCode(i)).append("<td id='" + j + "-" + (i-64) + "'><img class='img-responsive hoverLight' src='img/sea.gif'></td>");// création des cellules avec id perso de 1-1 à 10-10
         }
         tabcpu.append("</tr>");// fin de ligne, ajout du tag de clôture
     }
@@ -31,36 +33,47 @@ doc.ready(function createTabCPU() {
 // Fonction de récupération de l'id de la cellule cliquée
 // + Génération du nombre de missiles
 doc.ready(function tdClicked() {
-    missRest = 35; //Nombre de missile du joueur humain
-    missCP = '∞'; //Nombre de missile de l'IA
+    var missRest = 35; //Nombre de missile du joueur humain
+    var missCP = '∞'; //Nombre de missile de l'IA
     $("#missCP").append("<img class='img-responsive' src='img/missile.png'/>" + missCP);
     $("#missile").append("<img class='img-responsive' src='img/missile.png'/>" + missRest);
     $(".tabCPU").on("click", "td", function () {
         $("#missile").empty();
         missRest -= 1; // A chaque clic sur une case ennemie, on enlève un missile
         $("#missile").append("<img class='img-responsive' src='img/missile.png'/>" + missRest);
-        if (missRest == 0) {
+        if (missRest === 0) {
             alert("Plus de coup disponible");
             missRest = 1; // pour contrer la décrementation
-        };
-        console.log(this.id);
+        }
+        ;
+        if (tabCPUships.indexOf(this.id) !== -1){ // si l'ID de la cellule cliquée est dans la liste des cellules du tableau de jeu du CPU
+            console.log("TOUCHE !");
+            score += 100;
+            $("#scorePlayer").html(score);
+            $(this).html("<img class='img-responsive hoverLight' src='img/flammes.gif' style='background-color: darkred; opacity: 0.8'>");
+        }
+        else { // sinon le coup est raté
+            console.log("RATE !");
+            $(this).html("<img class='img-responsive' src='img/sea.gif' style='background-color: red; opacity: 1'>");
+        }
+        //console.log(this.id);
     });
 });
 
 //Fonction de choix de cellules CPU
 function choixCPU() {
-    var randC = Math.random();
-    var randL = Math.random();
-    var lettre = String.fromCharCode(Number(randL.toString()[3]) + 65); // génération d'une lettre aléatoire de A à J
-    var chiffre = Number(randC.toString()[3]) + 1; // génération d'un chiffre aléatoire entre 1 et 10
-    return chiffre + "-" + lettre;
+    var rand = Math.random();
+    var lettre = rand.toString()[3]; // lettre aléatoire de A à J notée de 0 à 9 en récupérant un des chiffres après la virgule du nombre généré
+    var chiffre = rand.toString()[2]; // chiffre aléatoire de 0 à 9 en récupérant un autre chiffre après la virgule du nombre généré
+    //console.log("OOO "+chiffre+"/"+lettre);
+    return chiffre + lettre;
 }
 
 // Fonction vidage du tableau CPU
 function vidageTabCPU() {
     for (var i = 1; i <= 10; i++) {
         for (var j = 1; j <= 10; j++) {
-            tabCPU.push([i, j, 0]); // début du jeu, vidage du tableau de mémorisation des bateaux du CPU
+            tabCPU.push([i + "-" + j]); // début du jeu, vidage du tableau de mémorisation des bateaux du CPU
         }
     }
 }
@@ -73,7 +86,8 @@ doc.ready(function initialisation() {
     placer(3); // contreTorpilleur
     placer(3); // sousMarin
     placer(2); // torpilleur
-    console.log(tabCPU);
+    //console.log(tabCPU);
+    console.log(tabCPUships);
 });
 
 // Fonction de placement des bateaux CPU
@@ -81,42 +95,43 @@ function placer(taille) {
     var rand = Math.random();
     var horiz = true; // variable qui gère si le bateau sera placé à l'horizontale ou verticale
     var choix = choixCPU(); // génération d'un choix de case aléatoire
-    var chiffre = choix.charAt(0); // chiffre généré
-    var lettre = (choix.charCodeAt(2)) - 64; // lettre générée
-    var k = 0;
-    var l = 0;
-    if (lettre >= 0 && lettre <= 10) {
-        if (rand >= 0.5) {
-            horiz = false; // utilisation d'un random, s'il est au dessus de 0.5 alors le bateau sera en position verticale
-        }
-        if (horiz) { // Si le bateau doit être placé à l'horizontal
-            if ((parseInt(chiffre) + parseInt(taille)) <= 10) {
-                for (k = chiffre; k < (parseInt(chiffre) + parseInt(taille)); k++) {
-                    // tabCPU[k][parseInt(lettre)][0] = 1;
-                }
-            }
-            else {
-                placer(taille);
+    var chiffre = Number(choix.charAt(0))+1; // chiffre généré, qui est le premier chiffre du nombre retourné par choixCPU, convertie en number étant donné que la fonction return un string
+    var lettre = Number(choix.charAt(1))+1; // lettre générée, qui est le 2ème chiffre du nombre retourné par choix CPU, les 2 ont ensuite 1 d'ajouté pour aller de 1 à 10
+    if (rand >= 0.5) {
+        horiz = false; // utilisation d'un random, s'il est au dessus de 0.5 alors le bateau sera en position verticale
+    }
+    if (horiz) { // Si le bateau doit être placé à l'horizontal
+        if (((chiffre + parseInt(taille)) <= 10) && (chiffre + parseInt(taille) >= 3)) { // vérifier que le bateau tiendra bien dans le tableau
+            for (var k = chiffre; k < (chiffre + parseInt(taille)); k++) { // pour case de départ jusqu'à case d'arrivée
+                var id = "#"+k+"-"+lettre;
+                tabCPUships.push(k+"-"+lettre); // ajout dans le tableau de la case occupée par la partie de bateau
+                $(id).html("<img class='img-responsive hoverLight' src='img/bateau.png'>"); // remplacement de l'image de fonds des cases occupées, pour debug uniquement
+                //console.log(id);
             }
         }
-        else { // sinon le bateau sera placé à la verticale
-            if ((parseInt(lettre) + parseInt(taille)) <= 10) {
-                // TODO placer le bateau dans le tableau
-                //console.log("placement bateau vertical en partant de " + choix + " sur " + taille + " cases de haut  <10 ?"+parseInt(chiffre) + "+" + parseInt(taille));
-            }
-            else {
-                placer(taille);
-            }
+        else {
+            placer(taille);
         }
     }
-    else placer(taille)
-    //console.log("choix : " + chiffre + "-" + lettre);
+    else { // sinon le bateau sera placé à la verticale
+        if (((lettre + parseInt(taille)) <= 10) && (lettre + parseInt(taille) >= 3)) { // idem horizontal
+            for (var k = lettre; k < (lettre + parseInt(taille)); k++) {
+                var idV = "#"+chiffre + "-" + k;
+                tabCPUships.push(chiffre + "-" + k);
+                $(idV).html("<img class='img-responsive hoverLight' src='img/bateau.png'>"); // remplacement de l'image de fonds des cases occupées, pour debug uniquement
+            }
+        }
+        else {
+            placer(taille);
+        }
+    }
+    // console.log("choix : " + chiffre + "-" + lettre);
 }
 
 //Fonction de placement des bateaux par le joueur
 doc.ready(function placeShipsPLAYER() {
     //TODO
-    var porteAvion ="5cases";
+    var porteAvion = "5cases";
     var croiseur = "4cases";
     var contreTorpilleur = "3cases";
     var sousMarin = "3cases";
@@ -124,6 +139,6 @@ doc.ready(function placeShipsPLAYER() {
     $(".tabPlayer").on("click", ".drop", function () {
         $(this).empty();
         $(this).append("<img class='img-responsive' src='img/bateau.png'/>");
-        
+
     });
 });

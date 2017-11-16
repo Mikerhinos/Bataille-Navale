@@ -10,8 +10,9 @@ body{
     color: #999;
 }
 
-#score{
+.score{
     font-family: "Digit";
+    font-size: 28px;
 }
 
 table {
