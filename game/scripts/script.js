@@ -81,7 +81,7 @@ function cpuPlay() {
         $(cellule).html("<img class='img-responsive' src='img/bateau.png' style='background-color: red; opacity: 0.5'>");
         tabPlayer.splice(index, 1); // suppression de cette cellule, elle ne pourra plus être jouée une 2ème fois
     }
-    console.log(cellule);
+    //console.log(cellule);
 }
 
 ///////////////////////////////////////////////////////
