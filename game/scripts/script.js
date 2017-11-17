@@ -7,14 +7,12 @@ var tabCPUships = [];
 var score = 0;
 var missRest = 35; //Nombre de missile du joueur humain
 var missCP = '∞'; //Nombre de missile de l'IA
-var jQmissCP = $("#missCP");
-var jQmissile = $("#missile");
 
 ///////////////////////////////////////////////////
 // Génération du tableau Player avec ids
 ///////////////////////////////////////////////////
 doc.ready(function createTabPlay() {
-    tabplayer.append("<tr><td id='missile'></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td></tr>");// Header des numéros de colonnes    
+    tabplayer.append("<tr><td id='missile'></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td></tr>");// Header des numéros de colonnes
     for (var i = 65; i <= 74; i++) {
         tabplayer.append("<tr id='P" + String.fromCharCode(i) + "'><td>" + String.fromCharCode(i) + "</td>");
         for (var j = 1; j <= 10; j++) {
@@ -43,14 +41,14 @@ doc.ready(function createTabCPU() {
 // + Génération du nombre de missiles
 //////////////////////////////////////////////////////////////
 doc.ready(function tdClicked() {
-    jQmissCP.append("<img class='img-responsive' src='img/missile.png'/>" + missCP);
-    jQmissile.append("<img class='img-responsive' src='img/missile.png'/>" + missRest);
+    $("#missCP").append("<img class='img-responsive' src='img/missile.png'/>" + missCP);
+    $("#missile").append("<img class='img-responsive' src='img/missile.png'/>" + missRest);
     $(".tabCPU").on("click", "td", function () {
-        jQmissile.empty();
+        $("#missile").empty();
         if (missRest > 0){
             missRest -= 1; // A chaque clic sur une case ennemie, on enlève un missile
         }
-        jQmissile.append("<img class='img-responsive' src='img/missile.png'/>" + missRest);
+        $("#missile").append("<img class='img-responsive' src='img/missile.png'/>" + missRest);
         if (missRest === 0) {
             alert("Plus de coup disponible");
             //missRest = 1; // pour contrer la décrementation
@@ -197,11 +195,11 @@ function placer(taille) {
 /////////////////////////////////////////////////////
 doc.ready(function placeShipsPLAYER() {
     //TODO
-    // var porteAvion = "5cases";
-    // var croiseur = "4cases";
-    // var contreTorpilleur = "3cases";
-    // var sousMarin = "3cases";
-    // var Torpilleur = "2cases";
+    var porteAvion = "5cases";
+    var croiseur = "4cases";
+    var contreTorpilleur = "3cases";
+    var sousMarin = "3cases";
+    var Torpilleur = "2cases";
     $(".tabPlayer").on("click", ".drop", function () {
         $(this).empty();
         $(this).append("<img class='img-responsive' src='img/bateau.png'/>");
