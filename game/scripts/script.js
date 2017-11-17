@@ -9,6 +9,11 @@ var score = 0;
 var scoreCPU = 0;
 var missRest = 40; //Nombre de missile du joueur humain
 var missCP = '∞'; //Nombre de missile de l'IA
+var tirPrecedentReussi = null;
+var tirDessus = false;
+var tirDessous = false;
+var tirGauche = false;
+var tirDroite = false;
 
 ///////////////////////////////////////////////////
 // Génération du tableau Player avec ids
@@ -76,12 +81,97 @@ function tdClicked() {
 // Fonction de jouer un coup CPU
 //////////////////////////////////////////////////////
 function cpuPlay() {
-    var coup = tabPlayer[Math.floor(Math.random() * tabPlayer.length)]; // récupération d'une cellule aléatoire dans le tableau de choix de cellules
-    var coupStr = coup.toString();
-    var indexTable = tabPlayer.indexOf(coup);
-    var index = tabPlayerships.indexOf(coupStr); // récupération de l'index du tableau contenant cette cellule
-    var cellule = "#P" + coupStr;
-    if (index > -1) { // si l'index a bien été récupéré, le coup a touché !
+    if (tirPrecedentReussi){
+        seekAndDestroy(tirPrecedentReussi);
+    }
+    else {
+        var coup = tabPlayer[Math.floor(Math.random() * tabPlayer.length)]; // récupération d'une cellule aléatoire dans le tableau de choix de cellules
+        var coupStr = coup.toString();
+        var indexTable = tabPlayer.indexOf(coup);
+        var index = tabPlayerships.indexOf(coupStr); // récupération de l'index du tableau contenant cette cellule
+        var cellule = "#P" + coupStr;
+        if (index > -1) { // si l'index a bien été récupéré, le coup a touché !
+            tir(cellule, coupStr, indexTable, "touche");
+            tirPrecedentReussi = coupStr; // transmission de la cellule touchée à la fonction de recherche de cellules autour via cette var
+        }
+        else { // sinon le coup est raté
+            tir(cellule, coupStr, indexTable, "manque");
+        }
+    }
+}
+
+///////////////////////////////////////////////////
+// Fonction qui va regarder les cellules autour et dire si elles sont dispo
+///////////////////////////////////////////////////
+function checkAlentours(cellule){
+    var colonne = Number(cellule[2]);
+    var ligne = Number(cellule[0]);
+    var up = (ligne-1)+"-"+colonne ;
+    var right = ligne+"-"+(colonne+1);
+    var down = (ligne+1)+"-"+colonne;
+    var left = ligne+"-"+(colonne-1);
+    if (tabPlayer.indexOf(up) === -1){
+        tirDessus = 1;
+    }
+    if (tabPlayer.indexOf(right) === -1){
+        tirDroite = 1;
+    }
+    if (tabPlayer.indexOf(down) === -1){
+        tirDessous = 1;
+    }
+    if (tabPlayer.indexOf(left) === -1){
+        tirGauche = 1;
+    }
+}
+
+///////////////////////////////////////////////////
+// Fonction de recherche autour d'une cellule touchée
+///////////////////////////////////////////////////
+function seekAndDestroy(tirPrecedentReussi){
+    var colonne = Number(tirPrecedentReussi[2]);
+    var ligne = Number(tirPrecedentReussi[0]);
+    var cellule = "";
+    checkAlentours(tirPrecedentReussi);
+    //console.log("L+C"+ligne+"-"+colonne);
+    if (!tirDessus && ligne >= 2){ // si on a pas essayé de tirer au dessus et qu'il y a une cellule
+        ligne -= 1;
+        cellule = ligne+"-"+colonne;
+        tir(cellule,cellule,1,"seek");
+        tirDessus = true;
+    }
+    else if (!tirDroite && colonne <= 9){ // essai à droite
+        colonne += 1;
+        cellule = ligne+"-"+colonne;
+        tir(cellule,cellule,1,"seek");
+        tirDroite = true;
+    }
+    else if (!tirDessous && ligne <= 9){ // essai en dessous
+        ligne += 1;
+        cellule = ligne+"-"+colonne;
+        tir(cellule,cellule,1,"seek");
+        tirDessous = true;
+    }
+    else if (!tirGauche && colonne >= 2){ // essai à gauche
+        colonne -= 1;
+        cellule = ligne+"-"+colonne;
+        tir(cellule,cellule,1,"seek");
+        tirGauche = true;
+    }
+    else {
+        tirPrecedentReussi = null; // si toutes les cellules alentour ont été jouées, tirer au hasard
+        tirDessous = false;
+        tirDessus = false;
+        tirGauche = false;
+        tirDroite = false;
+        cpuPlay();
+    }
+}
+
+////////////////////////////////////////////////////
+// Fonction de tir CPU touché
+///////////////////////////////////////////////////
+function tir(cellule, coupStr, indexTable, action){
+    if (action === "touche") {
         $(cellule).html("<img class='img-responsive' src='img/bateau.png' style='background-color: red; opacity: 0.5'>");
         tabPlayer.splice(indexTable, 1); // suppression de cette cellule, elle ne pourra plus être jouée une 2ème fois
         //console.log(cellule);
@@ -90,14 +180,25 @@ function cpuPlay() {
         $("#scoreCPU").html(scoreCPU);
         $(cellule).html("<img class='img-responsive hoverLight' src='img/flammes.gif' style='background-color: darkred; opacity: 0.8'>");
         //console.log(tabPlayer);
-        // TODO IA du CPU
     }
-    else { // sinon le coup est raté
-        console.log("CPU A RATE ! " + coup + " " + indexTable);
+    else if (action === "manque"){
+        console.log("CPU A RATE ! Cellule : " + coupStr);
         $(cellule).html("<img class='img-responsive' src='img/sea.gif' style='opacity: 0.6'>");
         tabPlayer.splice(indexTable, 1); // suppression de cette cellule, elle ne pourra plus être jouée une 2ème fois
         //console.log(tabPlayer);
     }
+    else if (action === "seek"){
+        var index = tabPlayerships.indexOf(coupStr); // récupération de l'index du tableau contenant cette cellule
+        var cellule2 = "#P" + coupStr;
+        indexTable = tabPlayer.indexOf(cellule);
+        tabPlayer.splice(indexTable, 1);
+        if (index > -1) { // si l'index a bien été récupéré, le coup a touché !
+            tir(cellule2, coupStr, indexTable, "touche");
+            tirPrecedentReussi = coupStr; // transmission de la cellule touchée à la fonction de recherche de cellules autour via cette var
+        }
+        else { // sinon le coup est raté
+            tir(cellule2, coupStr, indexTable, "manque");
+        }    }
 }
 
 ///////////////////////////////////////////////////////
@@ -170,7 +271,7 @@ function placer(taille) {
         horiz = false; // utilisation d'un random, s'il est au dessus de 0.5 alors le bateau sera en position verticale
     }
     if (horiz) { // Si le bateau doit être placé à l'horizontal
-        if (((chiffre + parseInt(taille)) <= 10) && (chiffre + parseInt(taille) >= 3) && (lettre <= 10)) { // vérifier que le bateau tiendra bien dans le tableau
+        if (((chiffre + parseInt(taille)) <= 10) && (chiffre + parseInt(taille) >= 3) && (lettre <= 10) && (chiffre <= 10)) { // vérifier que le bateau tiendra bien dans le tableau
             for (var k = chiffre; k < (chiffre + parseInt(taille)); k++) {
                 if (tabCPUships.indexOf(k + "-" + lettre) > -1) { // si le tableau comprends déjà une case occupée par la future position du bateau
                     placer(taille); // rechoisir une cellule de départ et recommencer
@@ -193,7 +294,7 @@ function placer(taille) {
         }
     }
     else { // sinon le bateau sera placé à la verticale
-        if (((lettre + parseInt(taille)) <= 10) && (lettre + parseInt(taille) >= 3) && (chiffre <= 10)) { // idem horizontal
+        if (((lettre + parseInt(taille)) <= 10) && (lettre + parseInt(taille) >= 3) && (chiffre <= 10 && (lettre <= 10))) { // idem horizontal
             for (var k = lettre; k < (lettre + parseInt(taille)); k++) {
                 if (tabCPUships.indexOf(chiffre + "-" + k) > -1) {
                     placer(taille);
@@ -230,7 +331,7 @@ function playerShips(taille) {
         horiz = false; // utilisation d'un random, s'il est au dessus de 0.5 alors le bateau sera en position verticale
     }
     if (horiz) { // Si le bateau doit être placé à l'horizontal
-        if (((chiffre + parseInt(taille)) <= 10) && (chiffre + parseInt(taille) >= 3)) { // vérifier que le bateau tiendra bien dans le tableau
+        if (((chiffre + parseInt(taille)) <= 10) && (chiffre + parseInt(taille) >= 3) && (lettre <= 10 && (chiffre <= 10))) { // vérifier que le bateau tiendra bien dans le tableau
             for (var k = chiffre; k < (chiffre + parseInt(taille)); k++) { // pour case de départ jusqu'à case d'arrivée
                 var id = "#P" + k + "-" + lettre;
                 tabPlayerships.push(k + "-" + lettre); // ajout dans le tableau de la case occupée par la partie de bateau
@@ -243,7 +344,7 @@ function playerShips(taille) {
         }
     }
     else { // sinon le bateau sera placé à la verticale
-        if (((chiffre + parseInt(taille)) <= 10) && (chiffre + parseInt(taille) >= 3)) { // idem horizontal
+        if (((chiffre + parseInt(taille)) <= 10) && (chiffre + parseInt(taille) >= 3) && (chiffre <= 10 && (lettre <= 10))) { // idem horizontal
             for (var k = lettre; k < (lettre + parseInt(taille)); k++) {
                 var idV = "#P" + chiffre + "-" + k;
                 tabPlayerships.push(chiffre + "-" + k);
