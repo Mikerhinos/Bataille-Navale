@@ -152,6 +152,8 @@ function initialisation() {
     playerShips(3);// sousMarin JOUEUR
     playerShips(2);// torpilleur JOUEUR
     console.log(tabPlayerships);
+    $("#init").attr("class", " btn btn-danger disabled"); //après avoir cliqué sur le bouton jouer, le désactiver
+    $("#init").text("Partie en cours !");
 }
 
 //////////////////////////////////////////
