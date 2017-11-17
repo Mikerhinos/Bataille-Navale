@@ -333,10 +333,20 @@ function playerShips(taille) {
     if (horiz) { // Si le bateau doit être placé à l'horizontal
         if (((chiffre + parseInt(taille)) <= 10) && (chiffre + parseInt(taille) >= 3) && (lettre <= 10 && (chiffre <= 10))) { // vérifier que le bateau tiendra bien dans le tableau
             for (var k = chiffre; k < (chiffre + parseInt(taille)); k++) { // pour case de départ jusqu'à case d'arrivée
-                var id = "#P" + k + "-" + lettre;
-                tabPlayerships.push(k + "-" + lettre); // ajout dans le tableau de la case occupée par la partie de bateau
-                $(id).html("<img class='img-responsive' src='img/bateau.png'>"); //affiche la position des bateaux du joueur
-                //console.log(id);
+                if (tabPlayerships.indexOf(k + "-" + lettre) > -1) {
+                    playerShips();
+                }
+                else {
+                    for (var k = chiffre; k < (chiffre + parseInt(taille)); k++) {
+                        var id = "#P" + k + "-" + lettre;
+                        tabPlayerships.push(k + "-" + lettre); // ajout dans le tableau de la case occupée par la partie de bateau
+                        $(id).html("<img class='img-responsive' src='img/bateau.png'>"); //affiche la position des bateaux du joueur
+                        //console.log(id);
+                        if (tabPlayerships.length === 17) {
+                            return 1;
+                        }
+                    }
+                }
             }
         }
         else {
@@ -346,9 +356,19 @@ function playerShips(taille) {
     else { // sinon le bateau sera placé à la verticale
         if (((chiffre + parseInt(taille)) <= 10) && (chiffre + parseInt(taille) >= 3) && (chiffre <= 10 && (lettre <= 10))) { // idem horizontal
             for (var k = lettre; k < (lettre + parseInt(taille)); k++) {
-                var idV = "#P" + chiffre + "-" + k;
-                tabPlayerships.push(chiffre + "-" + k);
-                $(idV).html("<img class='img-responsive' src='img/bateau.png'>"); // affiche la position des bateaux du joueur
+                if (tabPlayerships.indexOf(chiffre + "-" + k) > -1) {
+                    playerShips(taille);
+                }
+                else {
+                    for (var k = lettre; k < (lettre + parseInt(taille)); k++) {
+                        var idV = "#P" + chiffre + "-" + k;
+                        tabPlayerships.push(chiffre + "-" + k);
+                        $(idV).html("<img class='img-responsive' src='img/bateau.png'>"); // affiche la position des bateaux du joueur
+                        if (tabPlayerships.length === 17) {
+                            return 1;
+                        }
+                    }
+                }
             }
         }
         else {
