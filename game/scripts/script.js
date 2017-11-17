@@ -164,7 +164,7 @@ function placer(taille) {
                 }
                 else {
                     for (var k = chiffre; k < (chiffre + parseInt(taille)); k++) { // pour case de départ jusqu'à case d'arrivée
-                        var id = "#" + k + "-" + lettre;
+                        //var id = "#" + k + "-" + lettre;
                         tabCPUships.push(k + "-" + lettre); // ajout dans le tableau de la case occupée par la partie de bateau
                         //$(id).html("<img class='img-responsive hoverLight' src='img/bateau.png' style='opacity: 0.3'>"); // remplacement de l'image de fonds des cases occupées, pour DEBUG uniquement
                         //console.log(id);
@@ -187,7 +187,7 @@ function placer(taille) {
                 }
             else {
                     for (var k = lettre; k < (lettre + parseInt(taille)); k++) {
-                        var idV = "#" + chiffre + "-" + k;
+                        //var idV = "#" + chiffre + "-" + k;
                         tabCPUships.push(chiffre + "-" + k);
                         //$(idV).html("<img class='img-responsive hoverLight' src='img/bateau.png'>"); // remplacement de l'image de fonds des cases occupées, pour DEBUG uniquement
                         if (tabCPUships.length === 17){
