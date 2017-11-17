@@ -42,7 +42,7 @@ doc.ready(function createTabCPU() {
 // Fonction de récupération de l'id de la cellule cliquée
 // + Génération du nombre de missiles
 //////////////////////////////////////////////////////////////
-doc.ready(function tdClicked() {
+function tdClicked() {
     $("#missCP").append("<img class='img-responsive' src='img/missile.png'/>" + missCP);
     $("#missile").append("<img class='img-responsive' src='img/missile.png'/>" + missRest);
     $(".tabCPU").on("click", "td", function () {
@@ -70,7 +70,7 @@ doc.ready(function tdClicked() {
         }
         //console.log(this.id);
     });
-});
+}
 
 ///////////////////////////////////////////////////////
 // Fonction de jouer un coup CPU
@@ -139,6 +139,7 @@ function vidageTabPlayer() {
 function initialisation() {
     vidageTabCPU();
     vidageTabPlayer();
+    tdClicked();
     placer(5); // porteAvion
     placer(4); // croiseur
     placer(3); // contreTorpilleur
