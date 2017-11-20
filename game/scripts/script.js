@@ -9,7 +9,7 @@ var score = 0;
 var scoreCPU = 0;
 var missRest = 40; //Nombre de missile du joueur humain
 var missCP = '∞'; //Nombre de missile de l'IA
-var tirPrecedentReussi = null;
+var tirPrecedentReussi = "non";
 var tirDessus = false;
 var tirDessous = false;
 var tirGauche = false;
@@ -19,7 +19,7 @@ var tirDroite = false;
 // Génération du tableau Player avec ids
 ///////////////////////////////////////////////////
 doc.ready(function createTabPlay() {
-    tabplayer.append("<tr><td id='missile'></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td></tr>");// Header des numéros de colonnes    
+    tabplayer.append("<tr><td id='missile'></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td></tr>");// Header des numéros de colonnes
     for (var i = 65; i <= 74; i++) {
         tabplayer.append("<tr id='P" + String.fromCharCode(i) + "'><td>" + String.fromCharCode(i) + "</td>");
         for (var j = 1; j <= 10; j++) {
@@ -81,7 +81,7 @@ function tdClicked() {
 // Fonction de jouer un coup CPU
 //////////////////////////////////////////////////////
 function cpuPlay() {
-    if (tirPrecedentReussi){
+    if (tirPrecedentReussi !== "non") {
         seekAndDestroy(tirPrecedentReussi);
     }
     else {
@@ -100,94 +100,71 @@ function cpuPlay() {
     }
 }
 
-///////////////////////////////////////////////////
-// Fonction qui va regarder les cellules autour et dire si elles sont dispo
-///////////////////////////////////////////////////
-function checkAlentours(cellule){
-    var colonne = Number(cellule[2]);
-    var ligne = Number(cellule[0]);
-    var up = (ligne-1)+"-"+colonne ;
-    var right = ligne+"-"+(colonne+1);
-    var down = (ligne+1)+"-"+colonne;
-    var left = ligne+"-"+(colonne-1);
-    if (tabPlayer.indexOf(up) === -1){
-        tirDessus = 1;
-    }
-    if (tabPlayer.indexOf(right) === -1){
-        tirDroite = 1;
-    }
-    if (tabPlayer.indexOf(down) === -1){
-        tirDessous = 1;
-    }
-    if (tabPlayer.indexOf(left) === -1){
-        tirGauche = 1;
-    }
-}
 
 ///////////////////////////////////////////////////
 // Fonction de recherche autour d'une cellule touchée
 ///////////////////////////////////////////////////
-function seekAndDestroy(tirPrecedentReussi){
-    var colonne = Number(tirPrecedentReussi[2]);
-    var ligne = Number(tirPrecedentReussi[0]);
-    var cellule = "";
-    checkAlentours(tirPrecedentReussi);
+function seekAndDestroy(tirPrecedentReussi1) {
+    var ligne = Number(tirPrecedentReussi1[2]);
+    var colonne = Number(tirPrecedentReussi1[0]);
+    var cellule;
     //console.log("L+C"+ligne+"-"+colonne);
-    if (!tirDessus && ligne >= 2){ // si on a pas essayé de tirer au dessus et qu'il y a une cellule
+    if ((tirDessus === false) && colonne >= 2 && (tabPlayer.indexOf(colonne + "-" + (ligne-1)) < 0)) { // si on a pas essayé de tirer au dessus et qu'il y a une cellule (qui est dispo dans le tableau des coups jouables)
         ligne -= 1;
-        cellule = ligne+"-"+colonne;
-        tir(cellule,cellule,1,"seek");
+        cellule = colonne + "-" + ligne;
+        tir(cellule, cellule, 1, "seek");
         tirDessus = true;
     }
-    else if (!tirDroite && colonne <= 9){ // essai à droite
+    else if ((tirDroite === false) && ligne <= 9 && (tabPlayer.indexOf((colonne+1) + "-" + ligne) < 0)) { // essai à droite
         colonne += 1;
-        cellule = ligne+"-"+colonne;
-        tir(cellule,cellule,1,"seek");
+        cellule = colonne + "-" + ligne;
+        tir(cellule, cellule, 1, "seek");
         tirDroite = true;
     }
-    else if (!tirDessous && ligne <= 9){ // essai en dessous
+    else if ((tirDessous === false) && colonne <= 9 && (tabPlayer.indexOf(colonne + "-" + (ligne+1)) < 0)) { // essai en dessous
         ligne += 1;
-        cellule = ligne+"-"+colonne;
-        tir(cellule,cellule,1,"seek");
+        cellule = colonne + "-" + ligne;
+        tir(cellule, cellule, 1, "seek");
         tirDessous = true;
     }
-    else if (!tirGauche && colonne >= 2){ // essai à gauche
+    else if ((tirGauche === false) && ligne >= 2 && (tabPlayer.indexOf((colonne-1) + "-" + ligne) < 0)) { // essai à gauche
         colonne -= 1;
-        cellule = ligne+"-"+colonne;
-        tir(cellule,cellule,1,"seek");
+        cellule = colonne + "-" + ligne;
+        tir(cellule, cellule, 1, "seek");
         tirGauche = true;
     }
     else {
-        tirPrecedentReussi = null; // si toutes les cellules alentour ont été jouées, tirer au hasard
+        tirPrecedentReussi = "non"; // si toutes les cellules alentour ont été jouées, tirer au hasard
+        //console.log(tirDessus+","+tirDroite+","+tirDessous+","+tirGauche);
+        cpuPlay();
         tirDessous = false;
         tirDessus = false;
         tirGauche = false;
         tirDroite = false;
-        cpuPlay();
     }
 }
 
 ////////////////////////////////////////////////////
 // Fonction de tir CPU touché
 ///////////////////////////////////////////////////
-function tir(cellule, coupStr, indexTable, action){
+function tir(cellule, coupStr, indexTable, action) {
     if (action === "touche") {
         $(cellule).html("<img class='img-responsive' src='img/bateau.png' style='background-color: red; opacity: 0.5'>");
         tabPlayer.splice(indexTable, 1); // suppression de cette cellule, elle ne pourra plus être jouée une 2ème fois
         //console.log(cellule);
-        console.log("CPU A TOUCHE ! " + coup + " " + indexTable);
+        console.log("CPU A TOUCHE ! " + coupStr + " " + indexTable);
         scoreCPU += 100;
         $("#scoreCPU").html(scoreCPU);
         $(cellule).html("<img class='img-responsive hoverLight' src='img/flammes.gif' style='background-color: darkred; opacity: 0.8'>");
         //console.log(tabPlayer);
     }
-    else if (action === "manque"){
+    else if (action === "manque") {
         console.log("CPU A RATE ! Cellule : " + coupStr);
         $(cellule).html("<img class='img-responsive' src='img/sea.gif' style='opacity: 0.6'>");
         tabPlayer.splice(indexTable, 1); // suppression de cette cellule, elle ne pourra plus être jouée une 2ème fois
         //console.log(tabPlayer);
     }
-    else if (action === "seek"){
+    else if (action === "seek") {
         var index = tabPlayerships.indexOf(coupStr); // récupération de l'index du tableau contenant cette cellule
         var cellule2 = "#P" + coupStr;
         indexTable = tabPlayer.indexOf(cellule);
@@ -198,7 +175,8 @@ function tir(cellule, coupStr, indexTable, action){
         }
         else { // sinon le coup est raté
             tir(cellule2, coupStr, indexTable, "manque");
-        }    }
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////
@@ -229,7 +207,7 @@ function vidageTabCPU() {
 function vidageTabPlayer() {
     for (var i = 1; i <= 10; i++) {
         for (var j = 1; j <= 10; j++) {
-            tabPlayer.push([i + "-" + j]); // début du jeu, vidage du tableau de mémorisation des bateaux du CPU
+            tabPlayer.push([i + "-" + j]); // début du jeu, vidage du tableau de mémorisation des bateaux du player
         }
     }
 }
@@ -247,13 +225,13 @@ function initialisation() {
     placer(3); // sousMarin
     placer(2); // torpilleur
     //console.log(tabPlayer);
-    console.log(tabCPUships);
+    //console.log(tabCPUships);
     playerShips(5);// porteAvion JOUEUR
     playerShips(4);// croiseur JOUEUR
     playerShips(3);// contreTorpilleur JOUEUR
     playerShips(3);// sousMarin JOUEUR
     playerShips(2);// torpilleur JOUEUR
-    console.log(tabPlayerships);
+    //console.log(tabPlayerships);
     $("#init").attr("class", " btn btn-danger disabled"); //après avoir cliqué sur le bouton jouer, le désactiver
     $("#init").text("Partie en cours !");
 }
@@ -274,6 +252,7 @@ function placer(taille) {
         if (((chiffre + parseInt(taille)) <= 10) && (chiffre + parseInt(taille) >= 3) && (lettre <= 10) && (chiffre <= 10)) { // vérifier que le bateau tiendra bien dans le tableau
             for (var k = chiffre; k < (chiffre + parseInt(taille)); k++) {
                 if (tabCPUships.indexOf(k + "-" + lettre) > -1) { // si le tableau comprends déjà une case occupée par la future position du bateau
+                    //console.log("oqp"+(k + "-" + lettre));
                     placer(taille); // rechoisir une cellule de départ et recommencer
                 }
                 else {
