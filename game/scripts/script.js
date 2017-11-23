@@ -8,7 +8,7 @@ var tabCPUships = [];
 var tabPlayerships = [];
 var score = 0;
 var scoreCPU = 0;
-var missRest = 100; //Nombre de missile du joueur humain
+var missRest = 50; //Nombre de missile du joueur humain
 var missCP = '∞'; //Nombre de missile de l'IA
 var tirPrecedentReussi = "non";
 var tirDessus = false;
@@ -107,25 +107,25 @@ function seekAndDestroy(tirPrecedentReussi1) {
     var ligne = Number(tirPrecedentReussi1[2]);
     var colonne = Number(tirPrecedentReussi1[0]);
     var cellule;
-    if ((tirDessus === false) && colonne >= 2 && (tabPlayer.indexOf(colonne + "-" + (ligne-1)) < 0)) { // si on a pas essayé de tirer au dessus et qu'il y a une cellule (qui est dispo dans le tableau des coups jouables)
+    if ((tirDessus === false) && colonne >= 2 && (tabPlayer.indexOf(colonne + "-" + (ligne-1)) < 0) && (cellsPlayed.indexOf(colonne + "-" + (ligne-1)) < 0)) { // si on a pas essayé de tirer au dessus et qu'il y a une cellule (qui est dispo dans le tableau des coups jouables)
         ligne -= 1;
         cellule = colonne + "-" + ligne;
         tir(cellule, cellule, 1, "seek");
         tirDessus = true;
     }
-    else if ((tirDroite === false) && ligne <= 9 && (tabPlayer.indexOf((colonne+1) + "-" + ligne) < 0)) { // essai à droite
+    else if ((tirDroite === false) && ligne <= 9 && (tabPlayer.indexOf((colonne+1) + "-" + ligne) < 0) && (cellsPlayed.indexOf(colonne + "-" + (ligne-1)) < 0)) { // essai à droite
         colonne += 1;
         cellule = colonne + "-" + ligne;
         tir(cellule, cellule, 1, "seek");
         tirDroite = true;
     }
-    else if ((tirDessous === false) && colonne <= 9 && (tabPlayer.indexOf(colonne + "-" + (ligne+1)) < 0)) { // essai en dessous
+    else if ((tirDessous === false) && colonne <= 9 && (tabPlayer.indexOf(colonne + "-" + (ligne+1)) < 0) && (cellsPlayed.indexOf(colonne + "-" + (ligne-1)) < 0)) { // essai en dessous
         ligne += 1;
         cellule = colonne + "-" + ligne;
         tir(cellule, cellule, 1, "seek");
         tirDessous = true;
     }
-    else if ((tirGauche === false) && ligne >= 2 && (tabPlayer.indexOf((colonne-1) + "-" + ligne) < 0)) { // essai à gauche
+    else if ((tirGauche === false) && ligne >= 2 && (tabPlayer.indexOf((colonne-1) + "-" + ligne) < 0) && (cellsPlayed.indexOf(colonne + "-" + (ligne-1)) < 0)) { // essai à gauche
         colonne -= 1;
         cellule = colonne + "-" + ligne;
         tir(cellule, cellule, 1, "seek");
@@ -229,8 +229,6 @@ function initialisation() {
     placer(3); // contreTorpilleur
     placer(3); // sousMarin
     placer(2); // torpilleur
-    //console.log(tabPlayer);
-    //console.log(tabCPUships);
     playerShips(5);// porteAvion JOUEUR
     playerShips(4);// croiseur JOUEUR
     playerShips(3);// contreTorpilleur JOUEUR
@@ -262,8 +260,8 @@ function placer(taille) {
                 else {
                     for (var k = chiffre; k < (chiffre + parseInt(taille)); k++) { // pour case de départ jusqu'à case d'arrivée
                         tabCPUships.push(k + "-" + lettre); // ajout dans le tableau de la case occupée par la partie de bateau
-                        if (tabCPUships.length === 17) { // quand tous les bateaux sont placés, sortir
-                            return 1;
+                        if (tabCPUships.length >= 17) { // quand tous les bateaux sont placés, sortir
+                            return ;
                         }
                     }
                 }
@@ -285,8 +283,8 @@ function placer(taille) {
                     for (var k = lettre; k < (lettre + parseInt(taille)); k++) {
                         //var idV = "#" + chiffre + "-" + k;
                         tabCPUships.push(chiffre + "-" + k);
-                        if (tabCPUships.length === 17) {
-                            return 1;
+                        if (tabCPUships.length >= 17) {
+                            return ;
                         }
                     }
                 }
@@ -322,7 +320,7 @@ function playerShips(taille) {
                         var id = "#P" + k + "-" + lettre;
                         tabPlayerships.push(k + "-" + lettre); // ajout dans le tableau de la case occupée par la partie de bateau
                         $(id).html("<img class='img-responsive' src='img/bateau.png'>"); //affiche la position des bateaux du joueur
-                        if (tabPlayerships.length === 17) {
+                        if (tabPlayerships.length >= 17) {
                             return 1;
                         }
                     }
@@ -345,7 +343,7 @@ function playerShips(taille) {
                         var idV = "#P" + chiffre + "-" + k;
                         tabPlayerships.push(chiffre + "-" + k);
                         $(idV).html("<img class='img-responsive' src='img/bateau.png'>"); // affiche la position des bateaux du joueur
-                        if (tabPlayerships.length === 17) {
+                        if (tabPlayerships.length >= 17) {
                             return 1;
                         }
                     }
@@ -362,7 +360,8 @@ function playerShips(taille) {
 ////////////////////////////////////////////////////////////////
 // Fonction de calcul du score
 ////////////////////////////////////////////////////////////////
+/*
 function calculScore(){
     var player = prompt("Bravo ! \n Vous avez fait un score de : " + score.toString() + " + " + bonus + "pts de bonus ! \n Soit un score total de " + (score+bonus) + "pts !");
 
-}
+}*/

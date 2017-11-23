@@ -6,48 +6,56 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- APPEL BOOTSTRAP, CSS ET JAVASCRIPT -->
-    <link href="css/bootstrap.min.css" rel="stylesheet" />
-    <link href="css/style.css" rel="stylesheet" />
+    <link href="css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="css/style.css" rel="stylesheet"/>
     <link rel="icon" href="img/Ancre.ico">
     <title>BATAILLE NAVALE</title>
 </head>
 
 <body>
-    <div class="container">
-        <div class="row">
-
-            <div id="scorePlayer" class="col-xs-6 text-right score">000</div>
-            <div id="scoreCPU" class="col-xs-6 text-left score">000</div>
-            <div class="col-sm-12">
-                <button id="init" type="button" class="btn btn-danger" onclick="initialisation()" >Jouer</button>                
-            </div>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <button id="init" type="button" class="btn btn-danger" onclick="initialisation()">Jouer</button>
         </div>
     </div>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-6">
-
-                <table>
-                    <thead>PLAYER</thead>
-                    <tbody class="tabPlayer">
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-sm-6">
-
-                <table>
-                    <thead>COMPUTER</thead>
-                    <tbody class="tabCPU">
-                    </tbody>
-                </table>
-            </div>
+</div>
+<div class="container-fluid">
+    <div class="row names">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-3 player">
+            PLAYER
+        </div>
+        <div class="col-sm-2">
+            <div id="scorePlayer" class="col-xs-6 text-right score player">000</div>
+        </div>
+        <div class="col-sm-2">
+            <div id="scoreCPU" class="col-xs-6 text-left score computer">000</div>
+        </div>
+        <div class="col-sm-3 computer">
+            COMPUTER
+        </div>
+        <div class="col-sm-1"></div>
+        </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <table>
+                <tbody class="tabPlayer">
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-6">
+            <table>
+                <tbody class="tabCPU">
+                </tbody>
+            </table>
         </div>
     </div>
-
-    <script src="scripts/jquery-1.11.2.min.js"></script>
-    <script src="scripts/script.js"></script>
-    <!-- Appel du CDN de jquery /!\ Toujours importer les js en fin de body-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+</div>
+<script src="scripts/jquery-1.11.2.min.js"></script>
+<script src="scripts/script.js"></script>
+<!-- Appel du CDN de jquery /!\ Toujours importer les js en fin de body pour ne pas ralentir le chargement du html-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </body>
 
 </html>

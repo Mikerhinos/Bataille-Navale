@@ -1,7 +1,11 @@
 /* Police d'écriture pixelisée pour le score */
 @font-face{
-    font-family: "Digit";
+    font-family: Digit;
     src: url("digital.ttf");
+}
+@font-face{
+    font-family: atomics;
+    src: url("atomics.TTF");
 }
 
 body{
@@ -10,9 +14,13 @@ body{
     color: #999;
 }
 
-.score{
-    font-family: "Digit";
-    font-size: 28px;
+body {
+    font-family: atomics, Digit, Arial;
+}
+
+.score {
+    font-size: 25px;
+    margin-top: 5%;
 }
 
 table {
@@ -20,6 +28,21 @@ table {
     margin-top:5%;
     margin-left: 8%;
     margin-right: 8%;
+    font-size: 25px;
+}
+
+.names {
+    font-size: 30px;
+}
+
+.player {
+    color: #2b669a;
+    text-align: left;
+}
+
+.computer {
+    color: #843534;
+    text-align: right;
 }
 
 td {
